@@ -5,16 +5,19 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore .",
+    "lint": "npm run lint:js",
+    "lintfix": "npm run lint:js -- --fix"
   },
   "devDependencies": {
+    "lint": "^0.7.0",
     "nuxt": "3.0.0-rc.9",
     "sass": "^1.54.9",
     "sass-loader": "^10.3.1"
   },
   "dependencies": {
     "bulma": "^0.9.4",
-    "firebase": "^9.9.4",
-    "lint": "^0.7.0"
+    "firebase": "^9.9.4"
   }
 }
