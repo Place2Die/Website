@@ -1,4 +1,4 @@
-import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, GoogleAuthProvider, signInWithPopup} from "firebase/auth";
+import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, GoogleAuthProvider, signInWithPopup, fetchSignInMethodsForEmail} from "firebase/auth";
 import { doc, getDoc, getFirestore, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 
 export const createUser = async (email, password) => {
@@ -62,6 +62,7 @@ export const initUser = async () => {
             unsubscribe = onSnapshot(doc(getFirestore(), "users", user.uid), (doc) => {
                 // @ts-ignore
                 firestoreUser.value = doc.data();
+                // @ts-ignore
                 useRank.value = getRankFile(doc.data().rank);
             });
         } else {
@@ -109,6 +110,12 @@ export const updateProfile = async (displayName, photoURL) => {
 export const sendVerificationEmail = async () => {
     const auth = getAuth();
     return await sendEmailVerification(auth.currentUser)
+}
+
+export const doesEmailExist = async (email) => {
+    const auth = getAuth();
+    const result = await fetchSignInMethodsForEmail(auth, email);
+    return result.length > 0;
 }
 
 export const updateDiscord = async (discord) => {
