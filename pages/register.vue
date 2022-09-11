@@ -59,7 +59,8 @@
                                 {{error_message}}
                             </div>
 
-                            <button class="button is-success has-icons-left" @click="register">
+                            <button class="button is-success has-icons-left" 
+                                :disabled="submit_disabled" @click="register">
                                 <div class="icon is-small is-left">
                                     <i class="fas fa-paper-plane"></i>
                                 </div>
@@ -97,7 +98,11 @@ const email_success_message = ref("")
 const email_success = ref(false)
 const password_score = ref(0)
 
+const submit_disabled = ref(true)
+
 const register = async () => {
+
+    if(submit_disabled.value) return
 
     if (form.value.password != form.value.confirm_password) {
         password_error_message.value = "Passwords do not match"
@@ -136,30 +141,40 @@ const register = async () => {
             email_error.value = true
         }
     }
+
+    checkForm()
+}
+
+const checkForm = () => {
+    if((email_error.value || password_error.value) || (form.value.email === "" || form.value.password === "")) {
+        submit_disabled.value = true
+    } else {
+        submit_disabled.value = false
+    }
 }
 
 const checkPassword = () => {
-
-
     password_score.value = scorePassword(form.value.password);
-    if (form.value.password === "" || form.value.confirm_password === "") {
+    if (form.value.password === "") {
         password_error_message.value = ""
         password_error.value = false
-        return;
-    }
-
-    if (form.value.password !== form.value.confirm_password) {
+    } else {
+        if (form.value.password !== form.value.confirm_password) {
         password_error_message.value = "Passwords do not match"
         password_error.value = true
+        }
+        else if (form.value.password.length < 6) {
+            password_error_message.value = "Password must be at least 6 characters"
+            password_error.value = true
+        }
+        else {
+            password_error_message.value = ""
+            password_error.value = false
+        }
     }
-    else if (form.value.password.length < 6) {
-        password_error_message.value = "Password must be at least 6 characters"
-        password_error.value = true
-    }
-    else {
-        password_error_message.value = ""
-        password_error.value = false
-    }
+
+    
+    checkForm()
 }
 
 
