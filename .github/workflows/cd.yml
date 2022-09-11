@@ -1,0 +1,71 @@
+name: cd
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: 🔨 Build
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@master
+
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v2.5.1
+        with:
+          node-version: ${{ matrix.node }}
+          check-latest: true
+
+      - name: Upgrade NPM ⬆️
+        run: npm install -g npm
+
+      - name: Cache node_modules 📦
+        uses: actions/cache@v2.1.7
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies 👨🏻‍💻
+        run: npm ci --prefer-offline --no-audit
+
+      - name: Run linter 👀
+        run: npm run lint
+
+      - name: Build 👷‍
+        run: npm run build
+
+      - name: Generate 🧬
+        run: npm run generate
+
+      - name: Archive artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: dist
+          path: dist
+
+  deploy:
+    name: 🚀 Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download artifact ⬇
+        uses: actions/download-artifact@master
+        with:
+          name: dist
+          path: dist
+      - name: Update files on host 🛫
+        uses: sebastianpopp/ftp-action@releases/v2
+        with:
+          host: ftp.cluster030.hosting.ovh.net
+          user: qlbypgx
+          password: ${{secrets.ftp_password}}
+          localDir: dist/
+          remoteDir: notes/
+          options: "--delete --only-newer"
