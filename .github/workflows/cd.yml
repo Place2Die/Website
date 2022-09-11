@@ -67,5 +67,5 @@ jobs:
           user: qlbypgx
           password: ${{secrets.ftp_password}}
           localDir: dist/
-          remoteDir: notes/
+          remoteDir: place2die/
           options: "--delete --only-newer"
