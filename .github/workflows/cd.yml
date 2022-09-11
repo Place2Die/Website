@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@master
         with:
           name: dist
-          path: dist
+          path: .output/public/
 
   deploy:
     name: 🚀 Deploy
