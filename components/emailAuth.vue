@@ -44,19 +44,19 @@
 
 <script setup>
 
-const props = defineProps({
-  title: {
-    type: String,
-    required: true
-  },
-  success_message: {
-    type: String
-  },
-  form: {
-    type: Object,
-    required: true
-  }
-})
+  const props = defineProps({
+    title: {
+      type: String,
+      required: true
+    },
+    success_message: {
+      type: String
+    },
+    form: {
+      type: Object,
+      required: true
+    }
+  })
 
 </script>
 

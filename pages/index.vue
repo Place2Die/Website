@@ -12,7 +12,7 @@
             <div v-else>
                 <button class="button is-warning" @click="signOutUser">Sign out</button>
             </div>
-            <nuxt-link to="/admin" v-if="rank?.permissions.admin_panel === true">
+            <nuxt-link to="/admin" v-if="rank?.permissions?.admin_panel === true">
                 <button class="button is-danger">Admin</button>
             </nuxt-link>
         </div>

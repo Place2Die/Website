@@ -17,6 +17,10 @@
 
 <script setup>
 
+    const user = useFirebaseUser()
+
+    const msg = ref('')
+
     const form = ref({
         email: "",
         password: ""
@@ -45,6 +49,19 @@
             }
         }
     }
+
+    onMounted(() => {
+        watch(user, (user) => {
+            if(user){
+                if(route.query.r){
+                    navigateTo("/admin")
+                }
+                else {
+                    navigateTo("/")
+                }
+            }
+        })
+    })
 
 </script>
 

@@ -1,5 +1,5 @@
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, GoogleAuthProvider, signInWithPopup, fetchSignInMethodsForEmail} from "firebase/auth";
-import { doc, getDoc, getFirestore, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, getFirestore, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 
 export const createUser = async (email, password) => {
     const auth = getAuth();
@@ -63,7 +63,10 @@ export const initUser = async () => {
                 // @ts-ignore
                 firestoreUser.value = doc.data();
                 // @ts-ignore
-                useRank.value = getRankFile(doc.data().rank);
+                getRankFile(doc.data().rank).then((rankFile) => {
+                    // @ts-ignore
+                    rank.value = rankFile;
+                });
             });
         } else {
             // User is signed out
@@ -84,8 +87,14 @@ export const initUser = async () => {
 
     // @ts-ignore
     firestoreUser.value = await getUserFile();
-    // @ts-ignore
-    rank.value = await getRankFile(firestoreUser.value.rank);
+    if(firestoreUser.value !== null) {
+        // @ts-ignore
+        rank.value = await getRankFile(firestoreUser.value.rank);
+    } else {
+        // @ts-ignore
+        rank.value = null;
+    }
+
 }
 
 export const signOutUser = async () => {
@@ -157,6 +166,16 @@ export const updateRank = async (rank) => {
     })
 }
 
+export const updateRankOfUser = async (uid, rank) => {
+    const db = getFirestore();
+
+    const user = doc(db, "users", uid);
+
+    return await updateDoc(user, {
+        rank: rank
+    })
+}
+
 export const createUserFile = async () => {
     const db = getFirestore();
     const auth = getAuth();
@@ -167,6 +186,7 @@ export const createUserFile = async () => {
 
     return await setDoc(user, {
         uid: auth.currentUser.uid,
+        email: auth.currentUser.email,
         discord: "",
         mc: "",
         rank: "user"
@@ -192,9 +212,23 @@ export const getRank = async () => {
     }
 }
 
+export const getRankFromUID = async (uid) => {
+    const db = getFirestore();
+
+    const user = doc(db, "users", uid);
+
+    const docSnap = await getDoc(user);
+
+    if (docSnap.exists()) {
+        return docSnap.data().rank;
+    } else {
+        // doc.data() will be undefined in this case
+        return "user";
+    }
+}
+
 export const getRankFile = async (rankName) => {
     const db = getFirestore();
-    const rankF = useRank()
 
     if(!rankName) return {};
 
@@ -204,12 +238,10 @@ export const getRankFile = async (rankName) => {
 
     if (docSnap.exists()) {
         // @ts-ignore
-        rankF.value = docSnap.data();
         return docSnap.data();
     } else {
         // doc.data() will be undefined in this case
         // @ts-ignore
-        rankF.value = {};
         return {};
     }
 }
@@ -244,4 +276,30 @@ export const getUserFile = async () => {
         userFile.value = null;
         return {};
     }
+}
+
+export const getAllUsers = async () => {
+
+    const db = getFirestore();
+    const usersRef = collection(db, 'users');
+    const snapshot = await getDocs(usersRef);
+    const users = [];
+    snapshot.forEach((doc) => {
+        users.push(doc.data());
+    });
+    return users;
+
+}
+
+export const getAllRanks = async () => {
+    
+    const db = getFirestore();
+    const ranksRef = collection(db, 'ranks');
+    const snapshot = await getDocs(ranksRef);
+    const ranks = [];
+    snapshot.forEach((doc) => {
+        ranks.push(doc.data());
+    });
+    return ranks;
+
 }

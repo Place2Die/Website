@@ -7,6 +7,7 @@ export default defineEventHandler(async (event) => {
 
     const { user } = body;
 
+    // @ts-ignore
     req.user = user;
 
     return { status: 200, updated: true};
