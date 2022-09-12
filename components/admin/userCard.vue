@@ -11,7 +11,14 @@
                     <p class="title is-4">{{ user.mc ? user.mc : user.email}}</p>
                     <p class="subtitle is-6" v-if="user.mc">{{ user.email }}</p>
                     <div v-if="user.rank === 'admin'">
-                        <span class="tag is-danger">Admin</span>
+                        <span class="tag is-danger">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fas fa-crown"></i>
+                                </span>
+                                <span>Admin</span>
+                            </span>
+                        </span>
                     </div>
                     <div v-else>
                         <span v-if="isHigherRank" class="tag is-warning">{{ user.rank }}</span>
@@ -44,6 +51,8 @@
     const userRank = useRank();
 
     const cardUserRank = ref({});
+
+    const cardUser = ref({});
 
     const isHigherRank = computed(() => {
         return parseInt(userRank.index) < parseInt(cardUserRank.index);
