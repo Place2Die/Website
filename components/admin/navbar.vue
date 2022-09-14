@@ -1,9 +1,11 @@
 <template>
     <div class="master-container">
         <div>
-            <figure class="image is-128x128">
-
-            </figure>
+            <nuxt-link to="/">
+                <figure class="image is-16by9">
+                    <img src="~/assets/big.png">
+                </figure>
+            </nuxt-link>
         </div>
         <div class="menu">
             <p class="menu-label">
