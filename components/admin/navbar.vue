@@ -15,6 +15,9 @@
                 <li>
                     <router-link v-bind:class="{ 'is-active': dashboard }" to="/admin">Dashboard</router-link>
                 </li>
+                <li>
+                    <router-link v-bind:class="{ 'is-active': panel }" to="/admin/panel">Panel</router-link>
+                </li>
             </ul>
             <p class="menu-label">
                 Users
@@ -37,6 +40,10 @@
 
     const dashboard = computed(() => {
         return route.path == "/admin"
+    })
+
+    const panel = computed(() => {
+        return route.path == "/admin/panel"
     })
 
     const users = computed(() => {
