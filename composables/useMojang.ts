@@ -1,3 +1,4 @@
+import axios from 'axios'
 
 export const get3DHeadFromUsername = async (username) => {
     const uuid = await getUUUIDFromUsername(username);
@@ -8,7 +9,6 @@ export const get3DHeadFromUsername = async (username) => {
 }
 
 export const getUUUIDFromUsername = async (username) => {
-    const response = await fetch(`https://api.mojang.com/users/profiles/minecraft/${username}`);
-    const data = await response.json();
-    return data.id;
+    const response = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`);
+    return response.data.id;
 }

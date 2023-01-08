@@ -54,10 +54,10 @@
                                 <i class="icon fas fa-check"></i>
                                 {{success_message}}
                             </div>
-                            <div v-if="error_message" class="has-text-danger p-3 icon-text">
+                            <!-- div v-if="error_message" class="has-text-danger p-3 icon-text">
                                 <i class="icon fas fa-triangle-exclamation"></i>
                                 {{error_message}}
-                            </div>
+                            </div -->
 
                             <button class="button is-success has-icons-left" 
                                 :disabled="submit_disabled" @click="register">

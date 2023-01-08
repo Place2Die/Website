@@ -39,10 +39,10 @@
                                 <i class="icon fas fa-check"></i>
                                 {{success_message}}
                             </div>
-                            <div v-if="error_message" class="has-text-danger p-3 icon-text">
+                            <!-- div v-if="error_message" class="has-text-danger p-3 icon-text">
                                 <i class="icon fas fa-triangle-exclamation"></i>
                                 {{error_message}}
-                            </div>
+                            </div -->
 
                             <button class="button is-success has-icons-left" 
                                 :disabled="submit_disabled" @click="signin">
@@ -111,7 +111,7 @@ const signin = async () => {
             password: ""
         }
         if (result.code === "auth/wrong-password") {
-            password_error_message.value = "Wrong password"
+            password_.value = "Wrong password"
             password_error.value = true
         } else if (result.code === "auth/user-not-found"){
             email_error_message.value = "User not found"

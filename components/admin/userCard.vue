@@ -8,33 +8,46 @@
                     </figure>
                 </div>
                 <div class="media-content">
-                    <p class="title is-4">{{ user.mc ? user.mc : user.email}}</p>
+                    <p class="title is-4">
+                        {{ user.mc ? user.mc : user.email }}</p>
                     <p class="subtitle is-6" v-if="user.mc">{{ user.email }}</p>
-                    <div v-if="user.rank === 'admin'">
-                        <span class="tag is-danger">
+                    <div>
+                        <span class="tag" :class="{'is-danger' : user.rank === 'admin', 'is-warning': user.rank !== 'user'}">
                             <span class="icon-text">
                                 <span class="icon">
-                                    <i class="fas fa-crown"></i>
+                                    <i v-if="user.rank === 'admin'" class="fas fa-crown"></i>
+                                    <i v-else-if="user.rank === 'moderator'" class="fas fa-shield-alt"></i>
+                                    <i v-else class="fas fa-user"></i>
                                 </span>
-                                <span>Admin</span>
+                                <span style="text-transform: capitalize">{{ user.rank }}</span>
                             </span>
                         </span>
-                    </div>
-                    <div v-else>
-                        <span v-if="isHigherRank" class="tag is-warning">{{ user.rank }}</span>
-                        <select @change="updateRank" id="rankSelection" v-else>
-                            <option v-for="rank in ranks" :value="rank.id" :selected="rank.name === user.rank" v-bind:key="rank">{{ rank.name }}</option>
-                        </select>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card-footer" v-if="isHigherRank">
+        <div class="card-footer" v-if="!isHigherRank">
             <div class="card-footer-item">
-                <button class="button is-danger is-outlined">
+                <button class="button is-danger">
                     <span>Delete</span>
                     <span class="icon is-small">
-                        <i class="fas fa-times"></i>
+                      <i class="fas fa-times"></i>
+                  </span>
+                </button>
+            </div>
+            <div class="card-footer-item" v-if="canBePromoted">
+                <button class="button is-success"  @click="promote">
+                    <span>Promote</span>
+                    <span class="icon is-small">
+                        <i class="fas fa-arrow-up"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="card-footer-item" v-if="canBeDemoted">
+                <button class="button is-warning" @click="demote">
+                    <span>Demote</span>
+                    <span class="icon is-small">
+                        <i class="fas fa-arrow-down"></i>
                     </span>
                 </button>
             </div>
@@ -44,43 +57,74 @@
 
 <script setup>
 
-    const pdpUrl = ref("https://crafatar.com/renders/head/853c80ef3c3749fdaa49938b674adae5?size=4&default=MHF_Steve&overlay")
+import {updateRankOfUser} from "~/composables/useFirebase";
 
-    const ranks = ref([]);
+const pdpUrl = ref("https://crafatar.com/renders/head/853c80ef3c3749fdaa49938b674adae5?size=4&default=MHF_Steve&overlay")
 
-    const userRank = useRank();
+const ranks = ref([]);
 
-    const cardUserRank = ref({});
+const userRank = useRank();
 
-    const cardUser = ref({});
+const cardUserRank = ref({});
 
-    const isHigherRank = computed(() => {
-        return parseInt(userRank.index) < parseInt(cardUserRank.index);
-    })
+const cardUser = ref({});
 
-    const props = defineProps({
-        user: {
-            type: Object,
-            required: true
-        }
-    })
+const isHigherRank = computed(() => {
+    if (!userRank)
+        return false;
+    return parseInt(userRank.value.index) <= parseInt(cardUserRank.value.index);
+})
 
-    onMounted(async () => {
-        ranks.value = await getAllRanks();
-        //remove all ranks under the user rank
-        ranks.value = ranks.value.filter(rank => parseInt(rank.index) >= parseInt(userRank.value.index));
-        if(props.user.mc) {
-            pdpUrl.value = await get3DHeadFromUsername(props.user.mc)
-        }
-        cardUserRank.value = await getRankFile(props.user.rank);
-    })
-
-    const updateRank = async () => {
-        const rankSelection = document.getElementById("rankSelection");
-        const rank = rankSelection.options[rankSelection.selectedIndex].text;
-        const result = await updateRankOfUser(props.user.uid, rank);
-        console.log("result", result);
+const props = defineProps({
+    user: {
+        type: Object,
+        required: true
     }
+})
+
+onMounted(async () => {
+    ranks.value = await getAllRanks();
+    //remove all ranks under the user rank
+    ranks.value = ranks.value.filter(rank => parseInt(rank.index) <= parseInt(userRank.value.index));
+    if (props.user.mc) {
+        pdpUrl.value = await get3DHeadFromUsername(props.user.mc)
+    }
+    cardUserRank.value = await getRankFile(props.user.rank);
+})
+
+const canBePromoted = computed(() => {
+    if (!cardUserRank)
+        return false;
+    const aboveUserRank = ranks.value.filter(rank => parseInt(rank.index) > parseInt(cardUserRank.value.index));
+    return aboveUserRank.length > 0;
+})
+
+const canBeDemoted = computed(() => {
+    if (!cardUserRank)
+        return false;
+    const belowUserRank = ranks.value.filter(rank => parseInt(rank.index) < parseInt(cardUserRank.value.index));
+    return belowUserRank.length > 0;
+})
+
+const promote = async () => {
+    const aboveUserRank = ranks.value.filter(rank => parseInt(rank.index) > parseInt(cardUserRank.value.index)).sort((a, b) => a.index - b.index);
+    if (aboveUserRank.length > 0) {
+        const newRank = aboveUserRank[0];
+        await updateRankOfUser(props.user.uid, newRank.name);
+        cardUserRank.value = newRank;
+        props.user.rank = newRank.name;
+    }
+}
+
+const demote = async () => {
+    const belowUserRank = ranks.value.filter(rank => parseInt(rank.index) < parseInt(cardUserRank.value.index)).sort((a, b) => b.index - a.index);
+    if (belowUserRank.length > 0) {
+        const newRank = belowUserRank[belowUserRank.length - 1];
+        await updateRankOfUser(props.user.uid, newRank.name);
+        cardUserRank.value = newRank;
+        props.user.rank = newRank.name;
+    }
+}
 
 </script>
 

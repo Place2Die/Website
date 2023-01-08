@@ -40,6 +40,8 @@ export const signInGoogle = async () => {
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+            return { code: errorCode, error_message: errorMessage };
         });
     return credentials;
 
@@ -89,7 +91,7 @@ export const initUser = async () => {
 
     // @ts-ignore
     firestoreUser.value = await getUserFile();
-    if(firestoreUser.value !== null) {
+    if(firestoreUser.value) {
         // @ts-ignore
         rank.value = await getRankFile(firestoreUser.value.rank);
     } else {

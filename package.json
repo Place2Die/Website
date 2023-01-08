@@ -15,9 +15,11 @@
     "lint": "^0.7.0",
     "nuxt": "3.0.0-rc.9",
     "sass": "^1.54.9",
-    "sass-loader": "^10.3.1"
+    "sass-loader": "^10.3.1",
+    "axios": "^1.2.2"
   },
   "dependencies": {
+    "axios": "^1.2.2",
     "bulma": "^0.9.4",
     "firebase": "^9.9.4"
   }
