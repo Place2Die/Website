@@ -9,6 +9,14 @@ export const get3DHeadFromUsername = async (username) => {
 }
 
 export const getUUUIDFromUsername = async (username) => {
-    const response = await axios.get(`https://api.mojang.com/users/profiles/minecraft/${username}`);
+    const response = await axios({
+        method: 'get',
+        url: `https://crossorigin.me/https://api.mojang.com/users/profiles/minecraft/${username}`,
+        withCredentials: false,
+        headers: {
+            'Content-Type': 'application/json',
+            'Origin': 'https://place2die.fr'
+        }
+    })
     return response.data.id;
 }

@@ -86,7 +86,11 @@ onMounted(async () => {
     //remove all ranks under the user rank
     ranks.value = ranks.value.filter(rank => parseInt(rank.index) <= parseInt(userRank.value.index));
     if (props.user.mc) {
-        pdpUrl.value = await get3DHeadFromUsername(props.user.mc)
+        try {
+            pdpUrl.value = await get3DHeadFromUsername(props.user.mc)
+        } catch (e) {
+            console.log(e)
+        }
     }
     cardUserRank.value = await getRankFile(props.user.rank);
 })
