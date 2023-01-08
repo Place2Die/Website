@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer" v-if="!isHigherRank">
+        <div class="card-footer" v-if="!isCardRankHigher">
             <div class="card-footer-item">
                 <button class="button is-danger">
                     <span>Delete</span>
@@ -69,10 +69,9 @@ const cardUserRank = ref({});
 
 const cardUser = ref({});
 
-const isHigherRank = computed(() => {
-    if (!userRank)
-        return false;
-    return parseInt(userRank.value.index) <= parseInt(cardUserRank.value.index);
+const isCardRankHigher = computed(() => {
+    if (!userRank || !cardUserRank) return false;
+    return userRank.value.index <= cardUserRank.value.index;
 })
 
 const props = defineProps({
