@@ -23,19 +23,36 @@
         layout: "admin"
     })
 
+    onMounted(async () => {
+        let userList = await getAllUsers();
+        users.value = userList.sort((a, b) => {
+            let rankSort = b.rank.index - a.rank.index;
+            if(rankSort !== 0) return rankSort;
+            if (a.mc && b.mc) {
+                return a.mc.localeCompare(b.mc);
+            } else {
+                return a.email.localeCompare(b.email);
+            }
+        });
+    })
+
     const updateSearch = async () => {
         users.value = await getAllUsers();
+        users.value = users.value.sort((a, b) => {
+            let rankSort = b.rank.index - a.rank.index;
+            if(rankSort !== 0) return rankSort;
+            if (a.mc && b.mc) {
+                return a.mc.localeCompare(b.mc);
+            } else {
+                return a.email.localeCompare(b.email);
+            }
+        });
         if(searchText.value.length > 0) {
             users.value = users.value.filter(user => {
                 return user.email.toLowerCase().includes(searchText.value.toLowerCase()) || user.mc.toLowerCase().includes(searchText.value.toLowerCase()) || user.discord.toLowerCase().includes(searchText.value.toLowerCase());
             })
         }
     }
-
-    onMounted(async () => {
-        const userList = await getAllUsers();
-        users.value = userList;
-    })
 </script>
 
 <style lang="scss" scoped>

@@ -11,11 +11,10 @@ export const get3DHeadFromUsername = async (username) => {
 export const getUUUIDFromUsername = async (username) => {
     const response = await axios({
         method: 'get',
-        url: `https://crossorigin.me/https://api.mojang.com/users/profiles/minecraft/${username}`,
+        url: `https://api.codetabs.com/v1/proxy/?quest=https://api.mojang.com/users/profiles/minecraft/${username}`,
         withCredentials: false,
         headers: {
-            'Content-Type': 'application/json',
-            'Origin': 'https://place2die.fr'
+            'Content-Type': 'application/json'
         }
     })
     return response.data.id;

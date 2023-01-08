@@ -291,6 +291,9 @@ export const getAllUsers = async () => {
     snapshot.forEach((doc) => {
         users.push(doc.data());
     });
+    for (let i = 0; i < users.length; i++) {
+        users[i].rank = await getRankFile(users[i].rank);
+    }
     return users;
 
 }

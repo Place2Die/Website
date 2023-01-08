@@ -12,14 +12,14 @@
                         {{ user.mc ? user.mc : user.email }}</p>
                     <p class="subtitle is-6" v-if="user.mc">{{ user.email }}</p>
                     <div>
-                        <span class="tag" :class="{'is-danger' : user.rank === 'admin', 'is-warning': user.rank !== 'user'}">
+                        <span class="tag" :class="{'is-danger' : user.rank.name === 'admin', 'is-warning': user.rank.name !== 'user'}">
                             <span class="icon-text">
                                 <span class="icon">
-                                    <i v-if="user.rank === 'admin'" class="fas fa-crown"></i>
-                                    <i v-else-if="user.rank === 'moderator'" class="fas fa-shield-alt"></i>
+                                    <i v-if="user.rank.name === 'admin'" class="fas fa-crown"></i>
+                                    <i v-else-if="user.rank.name === 'moderator'" class="fas fa-shield-alt"></i>
                                     <i v-else class="fas fa-user"></i>
                                 </span>
-                                <span style="text-transform: capitalize">{{ user.rank }}</span>
+                                <span style="text-transform: capitalize">{{ user.rank.name }}</span>
                             </span>
                         </span>
                     </div>
@@ -92,7 +92,7 @@ onMounted(async () => {
             console.log(e)
         }
     }
-    cardUserRank.value = await getRankFile(props.user.rank);
+    cardUserRank.value = props.user.rank;
 })
 
 const canBePromoted = computed(() => {
