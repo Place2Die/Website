@@ -11,7 +11,7 @@
                     <p class="title is-4">
                         {{ user.mc ? user.mc : user.email }}</p>
                     <p class="subtitle is-6" v-if="user.mc">{{ user.email }}</p>
-                    <div>
+                    <div class="tags">
                         <span class="tag" :class="{'is-danger' : user.rank.name === 'admin', 'is-warning': user.rank.name !== 'user'}">
                             <span class="icon-text">
                                 <span class="icon">
@@ -20,6 +20,14 @@
                                     <i v-else class="fas fa-user"></i>
                                 </span>
                                 <span style="text-transform: capitalize">{{ user.rank.name }}</span>
+                            </span>
+                        </span>
+                        <span class="tag is-link" v-if="user.discord">
+                            <span class="icon-text">
+                                <span class="icon">
+                                    <i class="fa-brands fa-discord"></i>
+                                </span>
+                                <span>{{ user.discord }}</span>
                             </span>
                         </span>
                     </div>
@@ -125,7 +133,7 @@ const demote = async () => {
         const newRank = belowUserRank[belowUserRank.length - 1];
         await updateRankOfUser(props.user.uid, newRank.name);
         cardUserRank.value = newRank;
-        props.user.rank = newRank.name;
+        props.user.rank = await getRankFile(newRank.name);
     }
 }
 
