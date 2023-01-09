@@ -1,4 +1,4 @@
-import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, GoogleAuthProvider, signInWithPopup, fetchSignInMethodsForEmail} from "firebase/auth";
+import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail, fetchSignInMethodsForEmail} from "firebase/auth";
 import { collection, doc, getDoc, getDocs, getFirestore, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 
 export const createUser = async (email, password) => {
@@ -91,6 +91,7 @@ export const initUser = async () => {
 
     // @ts-ignore
     firestoreUser.value = await getUserFile();
+    // @ts-ignore
     if(firestoreUser.value) {
         // @ts-ignore
         rank.value = await getRankFile(firestoreUser.value.rank);
@@ -250,14 +251,10 @@ export const getRankFile = async (rankName) => {
     }
 }
 
-export const isAllowed = async (permission) => {
+export const isAllowed = async (permission) : Promise<boolean> => {
     const rank = await getRank();
     const rankFile = await getRankFile(rank);
-
-    if(rankFile.permissions.includes(permission)) {
-        return true;
-    }
-    return false;
+    return rankFile.permissions[permission] === true || false;
 }
 
 export const getUserFile = async () => {
@@ -265,7 +262,7 @@ export const getUserFile = async () => {
     const auth = getAuth();
     const userFile = useFirestoreUser();
 
-    if(!auth.currentUser) return;
+    if(!auth.currentUser) return null;
 
     const user = doc(db, "users", auth.currentUser.uid);
 
@@ -278,7 +275,7 @@ export const getUserFile = async () => {
     } else {
         // doc.data() will be undefined in this case
         userFile.value = null;
-        return {};
+        return null;
     }
 }
 
@@ -299,7 +296,6 @@ export const getAllUsers = async () => {
 }
 
 export const getAllRanks = async () => {
-    
     const db = getFirestore();
     const ranksRef = collection(db, 'ranks');
     const snapshot = await getDocs(ranksRef);
@@ -308,5 +304,4 @@ export const getAllRanks = async () => {
         ranks.push(doc.data());
     });
     return ranks;
-
 }

@@ -32,32 +32,135 @@
                         </span>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="card-footer" v-if="!isCardRankHigher">
-            <div class="card-footer-item">
-                <button class="button is-danger">
-                    <span>Delete</span>
-                    <span class="icon is-small">
-                      <i class="fas fa-times"></i>
-                  </span>
-                </button>
-            </div>
-            <div class="card-footer-item" v-if="canBePromoted">
-                <button class="button is-success"  @click="promote">
-                    <span>Promote</span>
-                    <span class="icon is-small">
-                        <i class="fas fa-arrow-up"></i>
-                    </span>
-                </button>
-            </div>
-            <div class="card-footer-item" v-if="canBeDemoted">
-                <button class="button is-warning" @click="demote">
-                    <span>Demote</span>
-                    <span class="icon is-small">
-                        <i class="fas fa-arrow-down"></i>
-                    </span>
-                </button>
+                <div class="media-right">
+                    <div class="dropdown is-right" :class="{'is-hoverable': showActions}" @mouseleave="showActions = false">
+                        <div class="dropdown-trigger">
+                            <button class="button" @click="showActions = !showActions">
+                                <span class="icon is-small">
+                                    <i class="fas fa-ellipsis-vertical"></i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                <a v-if="canBePromoted && !isCardRankHigher && permissions['admin.userss.promote']" href="#" class="dropdown-item" @click="promote">
+                                    <span class="icon-text is-small">
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-up"></i>
+                                        </span>
+                                        <span>Promote</span>
+                                    </span>
+                                </a>
+                                <a  v-else href="#" class="dropdown-item">
+                                    <span class="icon-text is-small has-text-grey-lighter is-disabled">
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-up"></i>
+                                        </span>
+                                        <span>Promote</span>
+                                    </span>
+                                </a>
+                                <a v-if="canBeDemoted && !isCardRankHigher && permissions['admin.userss.demote']" href="#" class="dropdown-item" @click="demote">
+                                    <span class="icon-text is-small">
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-down"></i>
+                                        </span>
+                                        <span>Demote</span>
+                                    </span>
+                                </a>
+                                <a v-else href="#" class="dropdown-item">
+                                    <span class="icon-text is-small has-text-grey-lighter is-disabled">
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-down"></i>
+                                        </span>
+                                        <span>Demote</span>
+                                    </span>
+                                </a>
+                                <hr class="dropdown-divider">
+                                <a v-if="permissions['admin.users.edit.username'] && !isCardRankHigher" href="#" class="dropdown-item" @click="modal('username')">
+                                    <span class="icon-text is-small">
+                                        <span class="icon">
+                                            <i class="fas fa-tag"></i>
+                                        </span>
+                                        <span>Edit username</span>
+                                    </span>
+                                </a>
+                                <a v-else href="#" class="dropdown-item">
+                                    <span class="icon-text is-small has-text-grey-lighter is-disabled">
+                                        <span class="icon">
+                                            <i class="fas fa-tag is-disabled"></i>
+                                        </span>
+                                        <span>Edit username</span>
+                                    </span>
+                                </a>
+                                <a v-if="permissions['admin.users.edit.email'] && !isCardRankHigher" href="#" class="dropdown-item">
+                                    <span class="icon-text is-small" @click="modal('email')">
+                                        <span class="icon">
+                                            <i class="fas fa-at"></i>
+                                        </span>
+                                        <span>Edit email</span>
+                                    </span>
+                                </a>
+                                <a v-else href="#" class="dropdown-item">
+                                    <span class="icon-text is-small has-text-grey-lighter is-disabled">
+                                        <span class="icon">
+                                            <i class="fas fa-at is-disabled"></i>
+                                        </span>
+                                        <span>Edit email</span>
+                                    </span>
+                                </a>
+                                <a v-if="permissions['admin.users.edit.discord'] && !isCardRankHigher" href="#" class="dropdown-item">
+                                    <span class="icon-text is-small" @click="modal('discord')">
+                                        <span class="icon">
+                                            <i class="fab fa-discord"></i>
+                                        </span>
+                                        <span>Edit discord</span>
+                                    </span>
+                                </a>
+                                <a v-else href="#" class="dropdown-item">
+                                    <span class="icon-text is-small has-text-grey-lighter is-disabled">
+                                        <span class="icon">
+                                            <i class="fab fa-discord is-disabled"></i>
+                                        </span>
+                                        <span>Edit discord</span>
+                                    </span>
+                                </a>
+                                <a v-if="permissions['admin.users.reset-password'] && !isCardRankHigher" href="#" class="dropdown-item">
+                                    <span class="icon-text is-small">
+                                        <span class="icon">
+                                            <i class="fas fa-key"></i>
+                                        </span>
+                                        <span>Reset password</span>
+                                    </span>
+                                </a>
+                                <a v-else href="#" class="dropdown-item">
+                                    <span class="icon-text is-small has-text-grey-lighter is-disabled">
+                                        <span class="icon">
+                                            <i class="fas fa-key"></i>
+                                        </span>
+                                        <span>Reset password</span>
+                                    </span>
+                                </a>
+                                <hr class="dropdown-divider">
+                                <a v-if="permissions['admin.users.delete'] && !isCardRankHigher" href="#" class="dropdown-item">
+                                    <span class="icon-text is-small has-text-danger">
+                                        <span class="icon">
+                                            <i class="fas fa-trash"></i>
+                                        </span>
+                                        <span>Delete</span>
+                                    </span>
+                                </a>
+                                <a v-else href="#" class="dropdown-item">
+                                    <span class="icon-text is-small has-text-danger-light is-disabled">
+                                        <span class="icon">
+                                            <i class="fas fa-trash"></i>
+                                        </span>
+                                        <span>Delete</span>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -75,7 +178,16 @@ const userRank = useRank();
 
 const cardUserRank = ref({});
 
-const cardUser = ref({});
+const showActions = ref(false);
+
+const wantedPermissions = ['admin.users.promote', 'admin.users.demote', 'admin.users.edit.username', 'admin.users.edit.email', 'admin.users.edit.discord', 'admin.users.delete', 'admin.users.reset-password'];
+const permissions = ref({});
+
+const updatePermissions = async () => {
+    for (const permission of wantedPermissions) {
+        permissions.value[permission] = await isAllowed(permission);
+    }
+}
 
 const isCardRankHigher = computed(() => {
     if (!userRank || !cardUserRank) return false;
@@ -102,6 +214,28 @@ onMounted(async () => {
     }
     cardUserRank.value = props.user.rank;
 })
+
+const emit = defineEmits(['open-modal', 'close-modal'])
+
+const modal = (id) => {
+    emit('open-modal');
+    let title = document.getElementById("modal-title");
+    let input = document.getElementById("modal-input");
+    switch (id) {
+        case "username":
+            title.innerText = "Username";
+            input.value = props.user.mc ? props.user.mc : "";
+            break;
+        case "email":
+            title.innerText = "Email";
+            input.value = props.user.email ? props.user.email : "";
+            break;
+        case "discord":
+            title.innerText = "Discord";
+            input.value = props.user.discord ? props.user.discord : "";
+            break;
+    }
+}
 
 const canBePromoted = computed(() => {
     if (!cardUserRank)
