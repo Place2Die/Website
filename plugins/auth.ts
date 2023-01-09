@@ -5,14 +5,14 @@ export default defineNuxtPlugin(() => {
       if(!$auth?.currentUser?.uid) {
         return navigateTo('/login')
       }
-    }),
+    })
 
     addRouteMiddleware('admin_panel', () => {
       const { $auth } = useNuxtApp()
       const rank = useRank();
-
+      let hasAccessToAdminPanel = rank?.value?.permissions['admin.panel'] || false;
       // @ts-ignore
-      if(!$auth?.currentUser?.uid || rank?.value?.permissions?.admin_panel !== true) {
+      if(!$auth?.currentUser?.uid || !hasAccessToAdminPanel) {
         return navigateTo('/login?r=/admin')
       }
     })

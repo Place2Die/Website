@@ -12,7 +12,7 @@
             <div v-else>
                 <button class="button is-warning" @click="signOutUser">Sign out</button>
             </div>
-            <nuxt-link to="/admin" v-if="rank?.permissions?.admin_panel === true">
+            <nuxt-link to="/admin" v-if="hasAdminPanel">
                 <button class="button is-danger">Admin</button>
             </nuxt-link>
         </div>
@@ -25,6 +25,14 @@
 
     const rank = useRank()
     const user = useFirebaseUser()
+
+    const hasAdminPanel = ref(false)
+
+    watchEffect(() => {
+        if(user.value){
+            hasAdminPanel.value = isAllowed('admin.panel')
+        }
+    })
 
 </script>
 
