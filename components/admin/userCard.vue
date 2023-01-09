@@ -257,12 +257,12 @@ const promote = async () => {
         const newRank = aboveUserRank[0];
         await updateRankOfUser(props.user.uid, newRank.name);
         cardUserRank.value = newRank;
-        props.user.rank = newRank.name;
+        props.user.rank = await getRankFile(newRank.name);
     }
 }
 
 const demote = async () => {
-    const belowUserRank = ranks.value.filter(rank => parseInt(rank.index) < parseInt(cardUserRank.value.index)).sort((a, b) => b.index - a.index);
+    const belowUserRank = ranks.value.filter(rank => parseInt(rank.index) < parseInt(cardUserRank.value.index)).sort((a, b) => a.index - b.index);
     if (belowUserRank.length > 0) {
         const newRank = belowUserRank[belowUserRank.length - 1];
         await updateRankOfUser(props.user.uid, newRank.name);
