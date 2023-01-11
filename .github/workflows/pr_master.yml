@@ -33,8 +33,8 @@ jobs:
             - name: Install dependencies 👨🏻‍💻
               run: npm ci --prefer-offline --no-audit
 
-            - name: Run lint fix 🚨
-              run: npm run lintfix
+            - name: Run lint 🚨
+              run: npm run lint
     build:
         runs-on: ubuntu-latest
         name: 🔨 Build
