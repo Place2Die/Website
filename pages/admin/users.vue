@@ -1,46 +1,46 @@
 <template>
-  <div class="users">
-    <div id="searchbar" class="control has-icons-left has-icons-right">
-      <input
-        v-model="searchText"
-        class="input"
-        type="text"
-        placeholder="Search for someone"
-        @input="updateSearch"
-      >
-      <span class="icon is-small is-left">
-        <i class="fas fa-magnifying-glass" />
-      </span>
-    </div>
-    <div id="user-list">
-        <admin-user-card v-for="user in users" :key="user.id" class="user" :user="user" @open-modal="openModal(user)" />
-    </div>
-    <div class="modal" :class="{'is-active': showModal}">
-      <div class="modal-background" @click="showModal = !showModal" />
-      <div class="modal-content">
-        <div class="box">
-          <div class="field">
-            <label id="modal-title" class="label">Username</label>
-            <div class="control">
-              <input id="modal-input" class="input" type="text" placeholder="Text input">
-            </div>
-          </div>
-          <div class="field is-grouped">
-            <div class="control">
-              <button class="button is-link" @click="submitChange">
-                Submit
-              </button>
-            </div>
-            <div class="control">
-              <button class="button is-link is-light" @click="showModal = !showModal">
-                Cancel
-              </button>
-            </div>
-          </div>
+    <div class="users">
+        <div id="searchbar" class="control has-icons-left has-icons-right">
+            <input
+                v-model="searchText"
+                class="input"
+                type="text"
+                placeholder="Search for someone"
+                @input="updateSearch"
+            >
+            <span class="icon is-small is-left">
+                <i class="fas fa-magnifying-glass" />
+            </span>
         </div>
-      </div>
+        <div id="user-list">
+            <admin-user-card v-for="user in users" :key="user.id" class="user" :user="user" @open-modal="openModal(user)" />
+        </div>
+        <div class="modal" :class="{'is-active': showModal}">
+            <div class="modal-background" @click="showModal = !showModal" />
+            <div class="modal-content">
+                <div class="box">
+                    <div class="field">
+                        <label id="modal-title" class="label">Username</label>
+                        <div class="control">
+                            <input id="modal-input" class="input" type="text" placeholder="Text input">
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-link" @click="submitChange">
+                                Submit
+                            </button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-link is-light" @click="showModal = !showModal">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script setup>

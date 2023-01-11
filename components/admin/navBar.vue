@@ -1,45 +1,45 @@
 <template>
-  <div class="master-container">
-    <div>
-      <nuxt-link to="/">
-        <figure class="image is-16by9">
-          <img src="~/assets/big.png" alt="">
-        </figure>
-      </nuxt-link>
+    <div class="master-container">
+        <div>
+            <nuxt-link to="/">
+                <figure class="image is-16by9">
+                    <img src="~/assets/big.png" alt="">
+                </figure>
+            </nuxt-link>
+        </div>
+        <div class="menu">
+            <p class="menu-label">
+                General
+            </p>
+            <ul class="menu-list">
+                <li>
+                    <router-link :class="{ 'is-active': dashboard }" to="/admin">
+                        Dashboard
+                    </router-link>
+                </li>
+                <li>
+                    <router-link :class="{ 'is-active': panel }" to="/admin/panel">
+                        Panel
+                    </router-link>
+                </li>
+            </ul>
+            <p class="menu-label">
+                Users
+            </p>
+            <ul class="menu-list">
+                <li>
+                    <router-link :class="{ 'is-active': users }" to="/admin/users">
+                        Users
+                    </router-link>
+                </li>
+                <li>
+                    <router-link :class="{ 'is-active': ranks }" to="/admin/ranks">
+                        Ranks
+                    </router-link>
+                </li>
+            </ul>
+        </div>
     </div>
-    <div class="menu">
-      <p class="menu-label">
-        General
-      </p>
-      <ul class="menu-list">
-        <li>
-          <router-link :class="{ 'is-active': dashboard }" to="/admin">
-            Dashboard
-          </router-link>
-        </li>
-        <li>
-          <router-link :class="{ 'is-active': panel }" to="/admin/panel">
-            Panel
-          </router-link>
-        </li>
-      </ul>
-      <p class="menu-label">
-        Users
-      </p>
-      <ul class="menu-list">
-        <li>
-          <router-link :class="{ 'is-active': users }" to="/admin/users">
-            Users
-          </router-link>
-        </li>
-        <li>
-          <router-link :class="{ 'is-active': ranks }" to="/admin/ranks">
-            Ranks
-          </router-link>
-        </li>
-      </ul>
-    </div>
-  </div>
 </template>
 
 <script setup>

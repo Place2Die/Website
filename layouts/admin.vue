@@ -1,12 +1,12 @@
 <template>
-  <div class="layout-container">
-    <div id="layout-left">
-      <admin-nav-bar />
+    <div class="layout-container">
+        <div id="layout-left">
+            <admin-nav-bar />
+        </div>
+        <div id="layout-right">
+            <slot />
+        </div>
     </div>
-    <div id="layout-right">
-      <slot />
-    </div>
-  </div>
 </template>
 
 <script setup>
