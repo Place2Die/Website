@@ -1,38 +1,44 @@
 <template>
-    <div>
-        <div class="nav">
-            <div v-if="!user" class="login">
-                <nuxt-link to="/login">
-                    <button class="button is-outlined">Login</button>
-                </nuxt-link>
-                <nuxt-link to="/register">
-                    <button class="button is-primary">Register</button>
-                </nuxt-link>
-            </div>
-            <div v-else>
-                <button class="button is-warning" @click="signOutUser">Sign out</button>
-            </div>
-            <nuxt-link to="/admin" v-if="hasAdminPanel">
-                <button class="button is-danger">Admin</button>
-            </nuxt-link>
-        </div>
+  <div>
+    <div class="nav">
+      <div v-if="!user" class="login">
+        <nuxt-link to="/login">
+          <button class="button is-outlined">
+            Login
+          </button>
+        </nuxt-link>
+        <nuxt-link to="/register">
+          <button class="button is-primary">
+            Register
+          </button>
+        </nuxt-link>
+      </div>
+      <div v-else>
+        <button class="button is-warning" @click="signOutUser">
+          Sign out
+        </button>
+      </div>
+      <nuxt-link v-if="hasAdminPanel" to="/admin">
+        <button class="button is-danger">
+          Admin
+        </button>
+      </nuxt-link>
     </div>
+  </div>
 </template>
-  
+
 <script setup>
 
-    import { signOutUser } from '~~/composables/useFirebase';
+import { signOutUser } from '~~/composables/useFirebase'
 
-    const rank = useRank()
-    const user = useFirebaseUser()
+const user = useFirebaseUser()
+const hasAdminPanel = ref(false)
 
-    const hasAdminPanel = ref(false)
-
-    watchEffect(() => {
-        if(user.value){
-            hasAdminPanel.value = isAllowed('admin.panel')
-        }
-    })
+watchEffect(() => {
+    if (user.value) {
+        hasAdminPanel.value = isAllowed('admin.panel')
+    }
+})
 
 </script>
 

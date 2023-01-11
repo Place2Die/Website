@@ -6,9 +6,10 @@
 
 <script setup>
 
-  onMounted(async () => {
-    initUser();
-  })
+onMounted(async () => {
+    await initUser()
+})
+
 </script>
 
 <style>

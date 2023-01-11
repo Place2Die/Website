@@ -1,11 +1,11 @@
 import axios from 'axios'
 
 export const get3DHeadFromUsername = async (username) => {
-    const uuid = await getUUUIDFromUsername(username);
-    const response = await fetch(`https://crafatar.com/renders/head/${uuid}?overlay`);
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    return url;
+    const uuid = await getUUUIDFromUsername(username)
+    const response = await fetch(`https://crafatar.com/renders/head/${uuid}?overlay`)
+    const blob = await response.blob()
+    const url = URL.createObjectURL(blob)
+    return url
 }
 
 export const getUUUIDFromUsername = async (username) => {
@@ -17,5 +17,5 @@ export const getUUUIDFromUsername = async (username) => {
             'Content-Type': 'application/json'
         }
     })
-    return response.data.id;
+    return response.data.id
 }

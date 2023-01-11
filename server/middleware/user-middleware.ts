@@ -1,3 +1,3 @@
-export default defineEventHandler(async (event) => {
-    event.req.user = parseCookies(event).user;
+export default defineEventHandler((event) => {
+    event.req.user = parseCookies(event).user
 })

@@ -1,14 +1,14 @@
 export default defineEventHandler(async (event) => {
-    const req = event.req;
+    const req = event.req
 
-    if(req.method !== 'POST') return { status: 405, body: 'Method Not Allowed' };
-    
+    if (req.method !== 'POST') { return { status: 405, body: 'Method Not Allowed' } }
+
     const body = await useBody(event)
 
-    const { user } = body;
+    const { user } = body
 
     // @ts-ignore
-    req.user = user;
+    req.user = user
 
-    return { status: 200, updated: true};
+    return { status: 200, updated: true }
 })
