@@ -4,7 +4,11 @@
             <div class="media">
                 <div class="media-left">
                     <figure class="image is-48x48">
-                        <img :src="pdpUrl" alt="Placeholder image">
+                        <img v-if="props.user.mc && pdpUrl !== ''" :src="pdpUrl" alt="Placeholder image">
+                        <span v-else-if="props.user.mc" class="icon is-large">
+                            <i class="fas fa-spinner fa-spin fa-2x" />
+                        </span>
+                        <img v-else src="https://crafatar.com/renders/head/853c80ef3c3749fdaa49938b674adae5?size=4&default=MHF_Steve&overlay" alt="Default face">
                     </figure>
                 </div>
                 <div class="media-content">
@@ -182,7 +186,7 @@
 
 import { updateRankOfUser } from '~/composables/useFirebase'
 
-const pdpUrl = ref('https://crafatar.com/renders/head/853c80ef3c3749fdaa49938b674adae5?size=4&default=MHF_Steve&overlay')
+const pdpUrl = ref('')
 
 const ranks = ref([])
 
