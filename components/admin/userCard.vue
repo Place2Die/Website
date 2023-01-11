@@ -9,28 +9,28 @@
                 </div>
                 <div class="media-content">
                     <p class="title is-4">
-                        {{ user.mc ? user.mc : user.email }}
+                        {{ props.user.mc ? props.user.mc : props.user.email }}
                     </p>
-                    <p v-if="user.mc" class="subtitle is-6">
+                    <p v-if="props.user.mc" class="subtitle is-6">
                         {{ user.email }}
                     </p>
                     <div class="tags">
-                        <span class="tag" :class="{'is-danger' : user.rank.name === 'admin', 'is-warning': user.rank.name !== 'user'}">
+                        <span class="tag" :class="{'is-danger' : props.user.rank.name === 'admin', 'is-warning': props.user.rank.name !== 'user'}">
                             <span class="icon-text">
                                 <span class="icon">
-                                    <i v-if="user.rank.name === 'admin'" class="fas fa-crown" />
-                                    <i v-else-if="user.rank.name === 'moderator'" class="fas fa-shield-alt" />
+                                    <i v-if="props.user.rank.name === 'admin'" class="fas fa-crown" />
+                                    <i v-else-if="props.user.rank.name === 'moderator'" class="fas fa-shield-alt" />
                                     <i v-else class="fas fa-user" />
                                 </span>
-                                <span style="text-transform: capitalize">{{ user.rank.name }}</span>
+                                <span style="text-transform: capitalize">{{ props.user.rank.name }}</span>
                             </span>
                         </span>
-                        <span v-if="user.discord" class="tag is-link">
+                        <span v-if="props.user.discord" class="tag is-link">
                             <span class="icon-text">
                                 <span class="icon">
                                     <i class="fa-brands fa-discord" />
                                 </span>
-                                <span>{{ user.discord }}</span>
+                                <span>{{ props.user.discord }}</span>
                             </span>
                         </span>
                     </div>
@@ -220,8 +220,6 @@ const props = defineProps({
     }
 })
 
-const user = ref(/** @type {User} */ (props.user))
-
 onMounted(async () => {
     ranks.value = await getAllRanks()
     // remove all ranks under the user rank
@@ -245,15 +243,15 @@ const modal = (id) => {
     switch (id) {
     case 'username':
         title.innerText = 'Username'
-        input.value = user.mc ? user.mc : ''
+        input.value = props.user.mc ? props.user.mc : ''
         break
     case 'email':
         title.innerText = 'Email'
-        input.value = user.email ? user.email : ''
+        input.value = props.user.email ? props.user.email : ''
         break
     case 'discord':
         title.innerText = 'Discord'
-        input.value = user.discord ? user.discord : ''
+        input.value = props.user.discord ? props.user.discord : ''
         break
     }
 }
@@ -274,9 +272,9 @@ const promote = async () => {
     const aboveUserRank = ranks.value.filter(rank => parseInt(rank.index) > parseInt(cardUserRank.value.index)).sort((a, b) => a.index - b.index)
     if (aboveUserRank.length > 0) {
         const newRank = aboveUserRank[0]
-        await updateRankOfUser(user.uid, newRank.name)
+        await updateRankOfUser(props.user.uid, newRank.name)
         cardUserRank.value = newRank
-        this.user.rank = await getRankFile(newRank.name)
+        props.user.rank = await getRankFile(newRank.name)
     }
 }
 
@@ -284,9 +282,9 @@ const demote = async () => {
     const belowUserRank = ranks.value.filter(rank => parseInt(rank.index) < parseInt(cardUserRank.value.index)).sort((a, b) => a.index - b.index)
     if (belowUserRank.length > 0) {
         const newRank = belowUserRank[belowUserRank.length - 1]
-        await updateRankOfUser(user.uid, newRank.name)
+        await updateRankOfUser(props.user.uid, newRank.name)
         cardUserRank.value = newRank
-        this.user.rank = await getRankFile(newRank.name)
+        props.user.rank = await getRankFile(newRank.name)
     }
 }
 
