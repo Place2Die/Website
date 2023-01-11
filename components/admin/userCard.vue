@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="card-content">
+        <div v-if="true" class="card-content">
             <div class="media">
                 <div class="media-left">
                     <figure class="image is-48x48">
@@ -9,28 +9,29 @@
                 </div>
                 <div class="media-content">
                     <p class="title is-4">
-                        {{ props.user.mc ? props.user.mc : props.user.email }}
+                        {{ user.mc ? user.mc : user.email }}
                     </p>
-                    <p v-if="props.user.mc" class="subtitle is-6">
+                    <p v-if="user.mc" class="subtitle is-6">
                         {{ user.email }}
                     </p>
                     <div class="tags">
-                        <span class="tag" :class="{'is-danger' : props.user.rank.name === 'admin', 'is-warning': props.user.rank.name !== 'user'}">
+                        <span class="tag" :class="rankColor">
                             <span class="icon-text">
                                 <span class="icon">
-                                    <i v-if="props.user.rank.name === 'admin'" class="fas fa-crown" />
-                                    <i v-else-if="props.user.rank.name === 'moderator'" class="fas fa-shield-alt" />
+                                    <i v-if="user.rank.name === 'admin'" class="fas fa-crown" />
+                                    <i v-else-if="user.rank.name === 'moderator'" class="fas fa-shield-alt" />
+                                    <i v-else-if="user.rank.name === 'developer'" class="fas fa-laptop" />
                                     <i v-else class="fas fa-user" />
                                 </span>
-                                <span style="text-transform: capitalize">{{ props.user.rank.name }}</span>
+                                <span style="text-transform: capitalize">{{ user.rank.name }}</span>
                             </span>
                         </span>
-                        <span v-if="props.user.discord" class="tag is-link">
+                        <span v-if="user.discord" class="tag is-link">
                             <span class="icon-text">
                                 <span class="icon">
                                     <i class="fa-brands fa-discord" />
                                 </span>
-                                <span>{{ props.user.discord }}</span>
+                                <span>{{ user.discord }}</span>
                             </span>
                         </span>
                     </div>
@@ -166,6 +167,14 @@
                 </div>
             </div>
         </div>
+        <div v-else>
+            <span class="icon-text is-small has-text-grey-lighter is-disabled">
+                <span class="icon">
+                    <i class="fas fa-user" />
+                </span>
+                <span>View profile</span>
+            </span>
+        </div>
     </div>
 </template>
 
@@ -185,6 +194,7 @@ const showActions = ref(false)
 
 const wantedPermissions = ['admin.users.promote', 'admin.users.demote', 'admin.users.edit.username', 'admin.users.edit.email', 'admin.users.edit.discord', 'admin.users.delete', 'admin.users.reset-password']
 const permissions = ref({})
+const rankColor = ref('')
 
 const updatePermissions = async () => {
     for (const permission of wantedPermissions) {
@@ -213,6 +223,18 @@ const isCardRankHigher = computed(() => {
  * @property {Rank} rank
  */
 
+const user = ref(/** @type {User} */ ({
+    uid: '',
+    mc: '',
+    discord: '',
+    email: '',
+    rank: {
+        name: '',
+        index: 0,
+        permissions: {}
+    }
+}))
+
 const props = defineProps({
     user: {
         type: Object,
@@ -220,7 +242,29 @@ const props = defineProps({
     }
 })
 
+// Watch the user rank so when it change we can change the color of the rank
+watchEffect(() => {
+    if (user.value.rank) {
+        switch (user.value.rank.name) {
+        case 'admin':
+            rankColor.value = 'is-danger'
+            break
+        case 'moderator':
+            rankColor.value = 'is-warning'
+            break
+        case 'developer':
+            rankColor.value = 'is-info'
+            break
+        default:
+            rankColor.value = ''
+            break
+        }
+    }
+})
+
 onMounted(async () => {
+    cardUserRank.value = props.user.rank
+    user.value = props.user
     ranks.value = await getAllRanks()
     // remove all ranks under the user rank
     ranks.value = ranks.value.filter(rank => parseInt(rank.index) <= parseInt(userRank.value.index))
@@ -231,7 +275,6 @@ onMounted(async () => {
         }
     }
     await updatePermissions()
-    cardUserRank.value = props.user.rank
 })
 
 const emit = defineEmits(['open-modal', 'close-modal'])
@@ -274,7 +317,7 @@ const promote = async () => {
         const newRank = aboveUserRank[0]
         await updateRankOfUser(props.user.uid, newRank.name)
         cardUserRank.value = newRank
-        props.user.rank = await getRankFile(newRank.name)
+        user.value.rank = await getRankFile(newRank.name)
     }
 }
 
@@ -284,7 +327,7 @@ const demote = async () => {
         const newRank = belowUserRank[belowUserRank.length - 1]
         await updateRankOfUser(props.user.uid, newRank.name)
         cardUserRank.value = newRank
-        props.user.rank = await getRankFile(newRank.name)
+        user.value.rank = await getRankFile(newRank.name)
     }
 }
 
