@@ -1,6 +1,6 @@
 <template>
   <div class="users">
-    <div class="control has-icons-left has-icons-right">
+    <div id="searchbar" class="control has-icons-left has-icons-right">
       <input
         v-model="searchText"
         class="input"
@@ -12,7 +12,9 @@
         <i class="fas fa-magnifying-glass" />
       </span>
     </div>
-    <admin-user-card v-for="user in users" :key="user.id" class="user" :user="user" @open-modal="openModal(user)" />
+    <div id="user-list">
+        <admin-user-card v-for="user in users" :key="user.id" class="user" :user="user" @open-modal="openModal(user)" />
+    </div>
     <div class="modal" :class="{'is-active': showModal}">
       <div class="modal-background" @click="showModal = !showModal" />
       <div class="modal-content">
@@ -139,6 +141,35 @@ const submitChange = () => {
         .user {
             margin: 1rem 0;
             width: 100%;
+        }
+
+        #user-list {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+            padding-right: 1rem;
+            position: relative;
+        }
+
+        #user-list::-webkit-scrollbar {
+          width: 12px;
+        }
+        #user-list::-webkit-scrollbar-track {
+          background: #161b22;
+          padding: 0 10px;
+        }
+        #user-list::-webkit-scrollbar-thumb {
+          background-color: #0d1117;
+          border-radius: 20px;
+          border: 3px solid #161b22;
+        }
+
+        #searchbar {
+            margin-bottom: 1rem;
+            margin-right: 2rem;
         }
     }
 
