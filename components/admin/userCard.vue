@@ -46,7 +46,7 @@
             </div>
             <div id="dropdown-menu" class="dropdown-menu" role="menu">
               <div class="dropdown-content">
-                <a v-if="canBePromoted && !isCardRankHigher && permissions['admin.userss.promote']" href="#" class="dropdown-item" @click="promote">
+                <a v-if="canBePromoted && !isCardRankHigher && permissions['admin.users.promote']" href="#" class="dropdown-item" @click="promote">
                   <span class="icon-text is-small">
                     <span class="icon">
                       <i class="fas fa-arrow-up" />
@@ -62,7 +62,7 @@
                     <span>Promote</span>
                   </span>
                 </a>
-                <a v-if="canBeDemoted && !isCardRankHigher && permissions['admin.userss.demote']" href="#" class="dropdown-item" @click="demote">
+                <a v-if="canBeDemoted && !isCardRankHigher && permissions['admin.users.demote']" href="#" class="dropdown-item" @click="demote">
                   <span class="icon-text is-small">
                     <span class="icon">
                       <i class="fas fa-arrow-down" />

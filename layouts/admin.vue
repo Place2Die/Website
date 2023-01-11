@@ -1,7 +1,7 @@
 <template>
   <div class="layout-container">
     <div id="layout-left">
-      <admin-navbar />
+      <admin-nav-bar />
     </div>
     <div id="layout-right">
       <slot />
