@@ -8,7 +8,7 @@ export default defineNuxtConfig({
             script: [
                 {
                     src: 'https://kit.fontawesome.com/91d11c3d0b.js'
-                },
+                }
             ]
         }
     },
