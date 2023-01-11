@@ -281,7 +281,7 @@ onMounted(async () => {
     await updatePermissions()
 })
 
-const emit = defineEmits(['open-modal', 'close-modal'])
+const emit = defineEmits(['open-modal'])
 
 const modal = (id) => {
     emit('open-modal')

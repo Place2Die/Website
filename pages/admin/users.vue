@@ -13,7 +13,13 @@
             </span>
         </div>
         <div id="user-list">
-            <admin-user-card v-for="user in users" :key="user.id" class="user" :user="user" @open-modal="openModal(user)" />
+            <admin-user-card
+                v-for="user in users"
+                :key="user.id"
+                class="user"
+                :user="user"
+                @open-modal="openModal(user)"
+            />
         </div>
         <div class="modal" :class="{'is-active': showModal}">
             <div class="modal-background" @click="showModal = !showModal" />
@@ -96,6 +102,18 @@ const updateSearch = async () => {
                     user.discord.toLowerCase().includes(search)
         })
     }
+}
+
+const reSort = () => {
+    users.value = users.value.sort((a, b) => {
+        const rankSort = b.rank.index - a.rank.index
+        if (rankSort !== 0) { return rankSort }
+        if (a.mc && b.mc) {
+            return a.mc.localeCompare(b.mc)
+        } else {
+            return a.email.localeCompare(b.email)
+        }
+    })
 }
 
 const submitChange = () => {
