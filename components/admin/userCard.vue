@@ -193,7 +193,7 @@ const updatePermissions = async () => {
 }
 
 const isCardRankHigher = computed(() => {
-    if (!userRank || !cardUserRank) { return false }
+    if (!userRank.value || !cardUserRank.value) { return false }
     return userRank.value.index <= cardUserRank.value.index
 })
 
@@ -226,16 +226,14 @@ onMounted(async () => {
     ranks.value = await getAllRanks()
     // remove all ranks under the user rank
     ranks.value = ranks.value.filter(rank => parseInt(rank.index) <= parseInt(userRank.value.index))
-    if (user.mc) {
+    if (props.user.mc) {
         try {
-            pdpUrl.value = await get3DHeadFromUsername(user.mc)
+            pdpUrl.value = await get3DHeadFromUsername(props.user.mc)
         } catch (e) {
-            // eslint-disable-next-line no-console
-            console.log(e)
         }
     }
-    cardUserRank.value = user.rank
     await updatePermissions()
+    cardUserRank.value = props.user.rank
 })
 
 const emit = defineEmits(['open-modal', 'close-modal'])
@@ -261,13 +259,13 @@ const modal = (id) => {
 }
 
 const canBePromoted = computed(() => {
-    if (!cardUserRank) { return false }
+    if (!cardUserRank.value) { return false }
     const aboveUserRank = ranks.value.filter(rank => parseInt(rank.index) > parseInt(cardUserRank.value.index))
     return aboveUserRank.length > 0
 })
 
 const canBeDemoted = computed(() => {
-    if (!cardUserRank) { return false }
+    if (!cardUserRank.value) { return false }
     const belowUserRank = ranks.value.filter(rank => parseInt(rank.index) < parseInt(cardUserRank.value.index))
     return belowUserRank.length > 0
 })
