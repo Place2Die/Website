@@ -1,24 +1,22 @@
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import {defineNuxtPlugin, useRuntimeConfig} from "#app";
-import { getAuth } from "firebase/auth";
+import { initializeApp } from 'firebase/app'
+import { defineNuxtPlugin, useRuntimeConfig } from '#app'
+import { getAuth } from 'firebase/auth'
 
-export default defineNuxtPlugin(nuxtApp => {
-    const config = useRuntimeConfig();
+export default defineNuxtPlugin((nuxtApp) => {
+    const config = useRuntimeConfig()
 
     const firebaseConfig = {
         apiKey: config.FIREBASE_API_KEY,
         projectId: config.FIREBASE_PROJECT_ID
-    };
+    }
 
     // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
+    initializeApp(firebaseConfig)
 
-    initUser();
+    initUser()
 
-    const auth = getAuth();
+    const auth = getAuth()
 
-    nuxtApp.vueApp.provide('auth', auth);
-    nuxtApp.provide('auth', auth);
-
+    nuxtApp.vueApp.provide('auth', auth)
+    nuxtApp.provide('auth', auth)
 })

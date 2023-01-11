@@ -1,10 +1,10 @@
 <template>
   <div class="layout-container">
     <div id="layout-left">
-        <admin-navbar />
+      <admin-navbar />
     </div>
     <div id="layout-right">
-        <slot />
+      <slot />
     </div>
   </div>
 </template>
