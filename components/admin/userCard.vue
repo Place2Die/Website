@@ -197,6 +197,22 @@ const isCardRankHigher = computed(() => {
     return userRank.value.index <= cardUserRank.value.index
 })
 
+/**
+ * @typedef {Object} Rank
+ * @property {string} name
+ * @property {number} index
+ * @property {Record<string, boolean>} permissions
+ */
+
+/**
+ * @typedef {Object} User
+ * @property {string} uid
+ * @property {string} mc
+ * @property {string} discord
+ * @property {string} email
+ * @property {Rank} rank
+ */
+
 const props = defineProps({
     user: {
         type: Object,
@@ -204,19 +220,21 @@ const props = defineProps({
     }
 })
 
+const user = ref(/** @type {User} */ (props.user))
+
 onMounted(async () => {
     ranks.value = await getAllRanks()
     // remove all ranks under the user rank
     ranks.value = ranks.value.filter(rank => parseInt(rank.index) <= parseInt(userRank.value.index))
-    if (props.user.mc) {
+    if (user.mc) {
         try {
-            pdpUrl.value = await get3DHeadFromUsername(props.user.mc)
+            pdpUrl.value = await get3DHeadFromUsername(user.mc)
         } catch (e) {
             // eslint-disable-next-line no-console
             console.log(e)
         }
     }
-    cardUserRank.value = props.user.rank
+    cardUserRank.value = user.rank
     await updatePermissions()
 })
 
@@ -229,15 +247,15 @@ const modal = (id) => {
     switch (id) {
     case 'username':
         title.innerText = 'Username'
-        input.value = props.user.mc ? props.user.mc : ''
+        input.value = user.mc ? user.mc : ''
         break
     case 'email':
         title.innerText = 'Email'
-        input.value = props.user.email ? props.user.email : ''
+        input.value = user.email ? user.email : ''
         break
     case 'discord':
         title.innerText = 'Discord'
-        input.value = props.user.discord ? props.user.discord : ''
+        input.value = user.discord ? user.discord : ''
         break
     }
 }
@@ -258,9 +276,9 @@ const promote = async () => {
     const aboveUserRank = ranks.value.filter(rank => parseInt(rank.index) > parseInt(cardUserRank.value.index)).sort((a, b) => a.index - b.index)
     if (aboveUserRank.length > 0) {
         const newRank = aboveUserRank[0]
-        await updateRankOfUser(props.user.uid, newRank.name)
+        await updateRankOfUser(user.uid, newRank.name)
         cardUserRank.value = newRank
-        this.props.user.rank = await getRankFile(newRank.name)
+        this.user.rank = await getRankFile(newRank.name)
     }
 }
 
@@ -268,9 +286,9 @@ const demote = async () => {
     const belowUserRank = ranks.value.filter(rank => parseInt(rank.index) < parseInt(cardUserRank.value.index)).sort((a, b) => a.index - b.index)
     if (belowUserRank.length > 0) {
         const newRank = belowUserRank[belowUserRank.length - 1]
-        await updateRankOfUser(props.user.uid, newRank.name)
+        await updateRankOfUser(user.uid, newRank.name)
         cardUserRank.value = newRank
-        this.props.user.rank = await getRankFile(newRank.name)
+        this.user.rank = await getRankFile(newRank.name)
     }
 }
 
