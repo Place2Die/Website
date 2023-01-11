@@ -104,18 +104,6 @@ const updateSearch = async () => {
     }
 }
 
-const reSort = () => {
-    users.value = users.value.sort((a, b) => {
-        const rankSort = b.rank.index - a.rank.index
-        if (rankSort !== 0) { return rankSort }
-        if (a.mc && b.mc) {
-            return a.mc.localeCompare(b.mc)
-        } else {
-            return a.email.localeCompare(b.email)
-        }
-    })
-}
-
 const submitChange = () => {
     const inputField = document.getElementById('modal-input')
     const inputType = document.getElementById('modal-title').innerText
