@@ -12,14 +12,17 @@
                 <i class="fas fa-magnifying-glass" />
             </span>
         </div>
-        <div id="user-list">
-            <admin-user-card
-                v-for="user in users"
-                :key="user.id"
-                class="user"
-                :user="user"
-                @open-modal="openModal(user)"
-            />
+        <div id="list-container">
+            <div id="fade-top" />
+            <div id="user-list">
+                <admin-user-card
+                    v-for="user in users"
+                    :key="user.id"
+                    class="user"
+                    :user="user"
+                    @open-modal="openModal(user)"
+                />
+            </div>
         </div>
         <div class="modal" :class="{'is-active': showModal}">
             <div class="modal-background" @click="showModal = !showModal" />
@@ -142,7 +145,7 @@ const submitChange = () => {
         justify-content: flex-start;
         width: 100%;
         height: 100%;
-        padding: 1rem;
+        padding: 1rem 1rem 0 1rem;
 
         .user {
             margin: 1rem 0;
@@ -158,6 +161,26 @@ const submitChange = () => {
             overflow-y: scroll;
             padding-right: 1rem;
             position: relative;
+        }
+
+        #list-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            width: 100%;
+            height: 100%;
+            overflow-y: hidden;
+            position: relative;
+
+            #fade-top {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 2rem;
+                background: linear-gradient(to bottom, #161b22, transparent);
+                z-index: 2;
+            }
         }
 
         #user-list::-webkit-scrollbar {
