@@ -188,7 +188,7 @@ export const updateRankOfUser = async (uid, rank) => {
     const user = doc(db, 'users', uid)
 
     return await updateDoc(user, {
-        rank: rank
+        rank
     })
 }
 
