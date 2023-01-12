@@ -1,44 +1,55 @@
 <template>
-  <div class="users">
-    <div class="control has-icons-left has-icons-right">
-      <input
-        v-model="searchText"
-        class="input"
-        type="text"
-        placeholder="Search for someone"
-        @input="updateSearch"
-      >
-      <span class="icon is-small is-left">
-        <i class="fas fa-magnifying-glass" />
-      </span>
-    </div>
-    <admin-user-card v-for="user in users" :key="user.id" class="user" :user="user" @open-modal="openModal(user)" />
-    <div class="modal" :class="{'is-active': showModal}">
-      <div class="modal-background" @click="showModal = !showModal" />
-      <div class="modal-content">
-        <div class="box">
-          <div class="field">
-            <label id="modal-title" class="label">Username</label>
-            <div class="control">
-              <input id="modal-input" class="input" type="text" placeholder="Text input">
-            </div>
-          </div>
-          <div class="field is-grouped">
-            <div class="control">
-              <button class="button is-link" @click="submitChange">
-                Submit
-              </button>
-            </div>
-            <div class="control">
-              <button class="button is-link is-light" @click="showModal = !showModal">
-                Cancel
-              </button>
-            </div>
-          </div>
+    <div class="users">
+        <div id="searchbar" class="control has-icons-left has-icons-right">
+            <input
+                v-model="searchText"
+                class="input"
+                type="text"
+                placeholder="Search for someone"
+                @input="updateSearch"
+            >
+            <span class="icon is-small is-left">
+                <i class="fas fa-magnifying-glass" />
+            </span>
         </div>
-      </div>
+        <div id="list-container">
+            <div id="fade-top" />
+            <div id="user-list">
+                <admin-user-card
+                    v-for="user in users"
+                    :key="user.id"
+                    class="user"
+                    :user="user"
+                    @open-modal="openModal(user)"
+                />
+            </div>
+        </div>
+        <div class="modal" :class="{'is-active': showModal}">
+            <div class="modal-background" @click="showModal = !showModal" />
+            <div class="modal-content">
+                <div class="box">
+                    <div class="field">
+                        <label id="modal-title" class="label">Username</label>
+                        <div class="control">
+                            <input id="modal-input" class="input" type="text" placeholder="Text input">
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button class="button is-link" @click="submitChange">
+                                Submit
+                            </button>
+                        </div>
+                        <div class="control">
+                            <button class="button is-link is-light" @click="showModal = !showModal">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -134,11 +145,60 @@ const submitChange = () => {
         justify-content: flex-start;
         width: 100%;
         height: 100%;
-        padding: 1rem;
+        padding: 1rem 1rem 0 1rem;
 
         .user {
             margin: 1rem 0;
             width: 100%;
+        }
+
+        #user-list {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+            padding-right: 1rem;
+            position: relative;
+        }
+
+        #list-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            width: 100%;
+            height: 100%;
+            overflow-y: hidden;
+            position: relative;
+
+            #fade-top {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 2rem;
+                background: linear-gradient(to bottom, #161b22, transparent);
+                z-index: 2;
+            }
+        }
+
+        #user-list::-webkit-scrollbar {
+          width: 12px;
+        }
+        #user-list::-webkit-scrollbar-track {
+          background: #161b22;
+          padding: 0 10px;
+        }
+        #user-list::-webkit-scrollbar-thumb {
+          background-color: #0d1117;
+          border-radius: 20px;
+          border: 3px solid #161b22;
+        }
+
+        #searchbar {
+            margin-bottom: 1rem;
+            margin-right: 2rem;
         }
     }
 
