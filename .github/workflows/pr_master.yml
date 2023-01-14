@@ -41,6 +41,7 @@ jobs:
         env:
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         steps:
           - name: Checkout 🛎
             uses: actions/checkout@master

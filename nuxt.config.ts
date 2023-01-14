@@ -16,10 +16,12 @@ export default defineNuxtConfig({
         // The private keys which are only available within server-side
         FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
         FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+        SENTRY_DSN: process.env.SENTRY_DSN,
         // Keys within public, will be also exposed to the client-side
         public: {
             FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
-            FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID
+            FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+            SENTRY_DSN: process.env.SENTRY_DSN
         }
     }
 })
