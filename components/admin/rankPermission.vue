@@ -57,11 +57,11 @@ onMounted(() => {
         icon.value = 'fa-user-shield'
         break
     case 'moderator':
-        color.value = 'has-text-warning'
+        color.value = 'has-text-success'
         icon.value = 'fa-user-cog'
         break
     case 'user':
-        color.value = 'has-text-success'
+        color.value = 'has-text-info'
         icon.value = 'fa-user'
         break
     default:
