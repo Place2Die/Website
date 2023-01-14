@@ -156,7 +156,15 @@ const fetchPermission = () => {
             allPermissions.value = Object.keys(permissions).map(permission => ({
                 name: permission,
                 isEnabled: permissions[permission]
-            })).sort((a, b) => a.name.localeCompare(b.name))
+            })).sort((a, b) => {
+                const name = a.name.localeCompare(b.name)
+                const aRank = a.name.split('.')[0]
+                const bRank = b.name.split('.')[0]
+                const aRankIndex = aRank === 'admin' ? 3 : aRank === 'mod' ? 2 : aRank === 'user' ? 1 : 0
+                const bRankIndex = bRank === 'admin' ? 3 : bRank === 'mod' ? 2 : bRank === 'user' ? 1 : 0
+                const rank = bRankIndex - aRankIndex
+                return rank === 0 ? name : rank
+            })
         }
     }
 }
