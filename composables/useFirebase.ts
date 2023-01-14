@@ -313,3 +313,44 @@ export const getAllRanks = async () => {
     })
     return ranks
 }
+
+export const addNewPermission = async (permission) => {
+    const db = getFirestore()
+    const ranksRef = collection(db, 'ranks')
+    const snapshot = await getDocs(ranksRef)
+    snapshot.forEach(async (doc) => {
+        const rank = doc.data()
+        rank.permissions[permission] = false
+        await updateDoc(doc.ref, rank)
+    })
+}
+
+export const removePermission = async (permission) => {
+    const db = getFirestore()
+    const ranksRef = collection(db, 'ranks')
+    const snapshot = await getDocs(ranksRef)
+    snapshot.forEach(async (doc) => {
+        const rank = doc.data()
+        delete rank.permissions[permission]
+        await updateDoc(doc.ref, rank)
+    })
+}
+
+export const updatePermission = async (rank, permission, value) => {
+    const db = getFirestore()
+    const rankRef = doc(db, 'ranks', rank)
+    const rankDoc = await getDoc(rankRef)
+    const rankData = rankDoc.data()
+    rankData.permissions[permission] = value
+    return await updateDoc(rankRef, rankData)
+}
+
+export const addNewRank = async (rank, index) => {
+    const db = getFirestore()
+    const rankRef = doc(db, 'ranks', rank)
+    return await setDoc(rankRef, {
+        name: rank,
+        index,
+        permissions: {}
+    })
+}
