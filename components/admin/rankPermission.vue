@@ -50,6 +50,7 @@ const updatePermission = () => {
 }
 
 onMounted(() => {
+    let slice = 1
     switch (permission.value.split('.')[0]) {
     case 'admin':
         color.value = 'has-text-danger'
@@ -65,12 +66,13 @@ onMounted(() => {
         break
     default:
         color.value = ''
-        icon.value = 'fa-question'
+        icon.value = 'fa-circle'
+        slice = 0
         break
     }
 
     // Split permission by comma then re join everything except the first by an arrow symbol
-    permission.value = permission.value.split('.').slice(1).join(' → ')
+    permission.value = permission.value.split('.').slice(slice).join(' → ')
 })
 
 </script>
