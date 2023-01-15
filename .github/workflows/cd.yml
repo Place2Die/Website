@@ -13,6 +13,10 @@ jobs:
       FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
       FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
       SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+      VERSION: ${{ github.sha }}
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
@@ -37,11 +41,21 @@ jobs:
       - name: Install dependencies 👨🏻‍💻
         run: npm ci --prefer-offline --no-audit
 
+      - name: Install sentry-cli 📦
+        run: curl -sL https://sentry.io/get-cli/ | SENTRY_CLI_VERSION="2.2.0" bash
+
       - name: Build 👷‍
         run: npm run build
 
       - name: Generate 🧬
         run: npm run generate
+
+      - name: Create release 🏷️
+        run: |
+          sentry-cli releases new ${{ env.VERSION }}
+          sentry-cli releases set-commits --auto ${{ env.VERSION }}
+          sentry-cli releases files ${{ env.VERSION }} upload-sourcemaps dist --rewrite --url-prefix '~/'
+          sentry-cli releases finalize ${{ env.VERSION }}
 
       - name: Archive artifact
         uses: actions/upload-artifact@master
