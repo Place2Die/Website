@@ -3,13 +3,14 @@ import { BrowserTracing } from '@sentry/tracing'
 
 export default defineNuxtPlugin((nuxtApp) => {
     const config = useRuntimeConfig()
+    const router = useRouter()
 
     Sentry.init({
         Vue: nuxtApp.vueApp,
         dsn: config.SENTRY_DSN,
         integrations: [
             new BrowserTracing({
-                routingInstrumentation: Sentry.vueRouterInstrumentation(nuxtApp.router)
+                routingInstrumentation: Sentry.vueRouterInstrumentation(router)
             })
         ],
         tracesSampleRate: 1.0
