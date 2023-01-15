@@ -10,7 +10,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         dsn: config.SENTRY_DSN,
         integrations: [
             new BrowserTracing({
-                routingInstrumentation: Sentry.vueRouterInstrumentation(nuxtApp.router)
+                routingInstrumentation: Sentry.vueRouterInstrumentation(router)
             })
         ],
         tracesSampleRate: 1.0
