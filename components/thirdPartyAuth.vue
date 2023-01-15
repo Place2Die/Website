@@ -1,14 +1,14 @@
 <template>
-  <div class="main-container">
-    <button class="button has-icon-left is-outlined is-primary" @click="signInWithGoogle">
-      <div class="icon is-small is-left">
-        <i class="fab fa-google" />
-      </div>
-      <div>
-        Sign in with Google
-      </div>
-    </button>
-  </div>
+    <div class="main-container">
+        <button class="button has-icon-left is-outlined is-primary" @click="signInWithGoogle">
+            <div class="icon is-small is-left">
+                <i class="fab fa-google" />
+            </div>
+            <div>
+                Sign in with Google
+            </div>
+        </button>
+    </div>
 </template>
 
 <script setup>
