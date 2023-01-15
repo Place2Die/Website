@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
-    "@sentry/tracing": "^7.30.0",
     "@sentry/vue": "^7.30.0",
     "axios": "^1.2.2",
     "bulma": "^0.9.4",
